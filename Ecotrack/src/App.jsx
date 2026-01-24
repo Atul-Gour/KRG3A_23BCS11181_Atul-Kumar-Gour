@@ -1,32 +1,42 @@
-import { Routes, Route, Navigate } from "react-router-dom";
-import Dashboard from "./pages/Dashboard";
-import DashboardHome from "./pages/DashboardHome";
-import Overview from "./pages/Overview";
-import Reports from "./pages/Reports";
-import Login from "./pages/Login";
+import Header from "./components/header";
+import Logs from "./pages/logs";
+import Dashboard from "./pages/dashboard";
+import { logs } from "./data/logs";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Login from "./pages/login";
 import ProtectedRoute from "./routes/ProtectedRoute";
-
+import DashboardLayout from "./pages/dashboardLayout";
+import DashboardAnalytics from "./pages/dashboardAnalytic";
+import DashboardSummary from "./pages/dashboardSummary";
 const App = () => {
   return (
-    <Routes>
-      <Route path="/login" element={<Login />} />
-
-      <Route
-        path="/dashboard"
-        element={
-          <ProtectedRoute>
-            <Dashboard />
-          </ProtectedRoute>
-        }
-      >
-       
-        <Route index element={<DashboardHome />} />
-        <Route path="overview" element={<Overview />} />
-        <Route path="reports" element={<Reports />} />
-      </Route>
-
-      <Route path="*" element={<Navigate to="/dashboard" />} />
-    </Routes>
+    <div>
+      <BrowserRouter>
+        <Header title="EcoTrack - Carbon Footprint Tracker Experiment 1" />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/login" element={<Login />} />
+          <Route index element={<DashboardSummary />} />
+          <Route path="analytics" element={<DashboardAnalytics />} />
+          <Route path="summary" element={<DashboardSummary />} />
+          <Route
+            path="/logs"
+            element={
+              <ProtectedRoute>
+                <Logs logs={logs} />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+    </div>
   );
 };
 
