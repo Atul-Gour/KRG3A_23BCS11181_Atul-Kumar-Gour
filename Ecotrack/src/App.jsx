@@ -1,34 +1,32 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-
-import Header from "./component/header";
-import Logs from "./pages/Logs";
-import Login from "./pages/login";
-import ProtectedRoute from "./routes/ProtectedRoutes";
-import DashboardLayout from "./pages/DashboardLayout";
-import DashboardSummary from "./pages/DashboardSummary";
-import DashboardAnalytics from "./pages/DashboardAnalytics";
+import { Routes, Route, Navigate } from "react-router-dom";
+import Dashboard from "./pages/Dashboard";
+import DashboardHome from "./pages/DashboardHome";
+import Overview from "./pages/Overview";
+import Reports from "./pages/Reports";
+import Login from "./pages/Login";
+import ProtectedRoute from "./routes/ProtectedRoute";
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<Login />} />
+    <Routes>
+      <Route path="/login" element={<Login />} />
 
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <DashboardLayout />
-            </ProtectedRoute>
-          }
-        >
-          <Route index element={<DashboardSummary />} />
-          <Route path="summary" element={<DashboardSummary />} />
-          <Route path="analytics" element={<DashboardAnalytics />} />
-          <Route path="logs" element={<Logs />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      >
+       
+        <Route index element={<DashboardHome />} />
+        <Route path="overview" element={<Overview />} />
+        <Route path="reports" element={<Reports />} />
+      </Route>
+
+      <Route path="*" element={<Navigate to="/dashboard" />} />
+    </Routes>
   );
 };
 

@@ -1,16 +1,32 @@
-import logs from "../data/log";
+import { Link, Outlet, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const Dashboard = () => {
-  const totalCarbon=logs.reduce((sum,log)=>sum+log.carbon,0)
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
+
   return (
     <div>
-      <h1>Dashboard</h1>
-      <h2>Total Carbon Footprint: {totalCarbon}Kgs</h2>
-      <ul>
-        {logs.map(log=>(
-            <li key={log.id}> {log.activity} = {log.carbon}kgs </li>
-        ))}
-      </ul>
+      <h2 style={{ color: "green" }}>Dashboard</h2>
+
+      <nav>
+        <Link to="" style={{ marginRight: "10px" }}>Home</Link>
+        <Link to="overview" style={{ marginRight: "10px" }}>Overview</Link>
+        <Link to="reports" style={{ marginRight: "10px" }}>Reports</Link>
+        <button onClick={handleLogout} style={{ color: "red" }}>
+          Logout
+        </button>
+      </nav>
+
+      <hr />
+
+      {/* CHILD ROUTES */}
+      <Outlet />
     </div>
   );
 };
