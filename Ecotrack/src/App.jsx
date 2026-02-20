@@ -1,56 +1,46 @@
-import React, { Suspense, lazy } from 'react';
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { CircularProgress, Box } from '@mui/material';
-import Header from "./components/Header";
-import ProtectedRoute from "./routes/ProtectedRoute.jsx";
+import { lazy, Suspense } from "react";                  
+import { Routes, Route, Navigate } from "react-router-dom";
+import ProtectedRoute from "./routes/ProtectedRoute";
 
-// Code splitting - Lazy load components for better performance
-// This reduces initial bundle size and improves load time
-const Login = lazy(() => import('./pages/login'));
-const DashboardLayout = lazy(() => import('./pages/DashboardLayout'));
-const DashboardSummary = lazy(() => import('./pages/dashboardSummary'));
-const DashboardAnalutics = lazy(() => import('./pages/DashboardAnalutics'));
-
-// Suspense fallback component
-const LoadingFallback = () => (
-  <Box
-    sx={{
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      minHeight: '100vh'
-    }}
-  >
-    <CircularProgress />
-  </Box>
-);
+// Lazy load pages 
+const Dashboard       = lazy(() => import("./pages/Dashboard"));
+const DashboardHome   = lazy(() => import("./pages/DashboardHome"));
+const Overview        = lazy(() => import("./pages/Overview"));
+const Reports         = lazy(() => import("./pages/Reports"));
+const Login           = lazy(() => import("./pages/Login"));
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <Header />
-      
-      <Suspense fallback={<LoadingFallback />}>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <DashboardLayout />
-              </ProtectedRoute>
-            }
-          >
-            <Route index element={<DashboardSummary />} />
-            <Route path="summary" element={<DashboardSummary />} />
-            <Route path="analytics" element={<DashboardAnalutics />} />
-          </Route>
-        </Routes>
-      </Suspense>
-    </BrowserRouter>
+    <Suspense fallback={
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        minHeight: '100vh' 
+      }}>
+        Loading application...
+      </div>
+    }>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<DashboardHome />} />
+          <Route path="overview" element={<Overview />} />
+          <Route path="reports" element={<Reports />} />
+        </Route>
+
+        <Route path="*" element={<Navigate to="/dashboard" />} />
+      </Routes>
+    </Suspense>
   );
 };
 
 export default App;
-
